@@ -3,14 +3,13 @@ jdk:
 - oraclejdk8
 
 dist: trusty
-sudo: required
 
 addons:
   sonarqube:
     organization: "Datom"
 
 script:
-- mvn clean install
+- mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
 
 after_success:
 - sonar-scanner
