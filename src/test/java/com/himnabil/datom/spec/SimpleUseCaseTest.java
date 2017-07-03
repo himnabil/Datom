@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
  * @author himna
  * @since 6/26/2017.
  */
-public class SimpleUseCase {
+public class SimpleUseCaseTest {
 
     private final String DATOM_1 = "datom1";
 
