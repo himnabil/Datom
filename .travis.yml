@@ -6,7 +6,7 @@ dist: trusty
 
 addons:
   sonarqube:
-    organization: "Datom"
+    organization: himnabil-github
 
 script:
 - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
