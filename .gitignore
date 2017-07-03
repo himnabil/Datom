@@ -206,3 +206,4 @@ Temporary Items
 .apdisk
 
 .idea/
+!/datom/src/main/java/com/himnabil/datom/api/annotation/DatomKey.java

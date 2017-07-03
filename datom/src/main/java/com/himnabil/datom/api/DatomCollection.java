@@ -18,7 +18,7 @@ public interface DatomCollection {
 
 
     <T> void collect (Class<T> toCollectClass, T toCollect);
-    <T> T assamble (Class<T> toDistributeClass);
+    <T> T assemble(Class<T> toAssembleClass);
     <T> T getValue (String datomId, Class<T> valueClass );
 
 

@@ -1,9 +1,9 @@
 package com.himnabil.datom.spec;
 
+import com.google.common.collect.ImmutableMap;
 import com.himnabil.datom.api.DatomCollection;
-import com.himnabil.datom.api.DatomCollectionFactory;
-import com.himnabil.datom.api.annotation.DatomKey;
-import com.himnabil.datom.api.impl.SimpleDatomCollectionFactory;
+import com.himnabil.datom.api.SimpleDatomCollectionFactory;
+import com.himnabil.datom.api.impl.SimpleDatomCollectionFactoryImpl;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,9 +15,10 @@ import static org.junit.Assert.*;
  */
 public class SimpleUseCase {
 
+    private final String DATOM_1 = "datom1";
+
     public class DataFormat_1{
 
-        @DatomKey(key = "datom_1")
         public String datom1Field1;
 
         public DataFormat_1() {}
@@ -33,10 +34,13 @@ public class SimpleUseCase {
 
     public class DataFormat_2{
 
-        @DatomKey(key = "datom_1")
         public String datom1Field2;
 
         public DataFormat_2() {}
+
+        public DataFormat_2(String datom1Field2) {
+            this.datom1Field2 = datom1Field2;
+        }
 
         public String getDatom1Field2() {
             return datom1Field2;
@@ -47,11 +51,24 @@ public class SimpleUseCase {
         }
     }
 
-    private DatomCollectionFactory datomCollectionFactory ;
+    private SimpleDatomCollectionFactory datomCollectionFactory ;
 
     @Before()
     public void setUp(){
-        datomCollectionFactory = new SimpleDatomCollectionFactory();
+        datomCollectionFactory = new SimpleDatomCollectionFactoryImpl();
+        datomCollectionFactory.setCollector(
+                DataFormat_1.class,
+                data -> ImmutableMap.
+                        <String, Object>builder()
+                        .put(DATOM_1, data.getDatom1Field1())
+                        .build()
+        );
+
+        datomCollectionFactory.setAssembler(
+                DataFormat_2.class,
+                datomMap ->
+                        new DataFormat_2((String) datomMap.get(DATOM_1))
+        );
     }
 
     @Test
@@ -64,7 +81,7 @@ public class SimpleUseCase {
         DatomCollection datomCollection = datomCollectionFactory.getNewInstance();
 
         datomCollection.collect(DataFormat_1.class, dataFormat_1);
-        DataFormat_2 dataFormat_2 = datomCollection.assamble(DataFormat_2.class);
+        DataFormat_2 dataFormat_2 = datomCollection.assemble(DataFormat_2.class);
 
         assertEquals(dataFormat_1.getDatom1Field1() , dataFormat_2.getDatom1Field2());
     }
